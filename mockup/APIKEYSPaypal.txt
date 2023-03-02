@@ -1,0 +1,8 @@
+Sandbox Account:
+sb-iv10k19612805@business.example.com
+
+Client ID:
+AYH5pwPifF_9tH_gwMWgYKNpGAWa1dUkixuJ0tXRSc01Nmwowa3uA_FHfN_aQxK-9gg-d4TjGYHOLBCW
+
+Secret:
+EEBbuqeW75CaWhwAXrsbe0-VS2LpyhYaUmjb79K1oFdjBOc4Rw6H9X9YP1noqVLvUqK6bBdrPL4s7JfL

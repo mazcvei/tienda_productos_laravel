@@ -1,0 +1,77 @@
+crear tablas migration
+
+** si creas modelos por cada tabla ya te crea automaticamente la migración **
+
+--level0
+php artisan make:model ips -m
+php artisan make:model roles -m
+php artisan make:model states -m
+php artisan make:model addresses -m
+
+--level1
+php artisan make:model users -m
+
+--level2
+php artisan make:model sessions -m
+php artisan make:model paypals -m
+
+--level3
+php artisan make:model user_addresses -m
+php artisan make:model orders -m
+
+--level4
+php artisan make:model products -m
+
+ejecutar php artisan migrate para crear las bases de datos referenciadas en el archivo .env
+php artisan migrate:fresh borra todas las tablas
+
+** sino creas las tablas así sin modelos **
+
+php artisan make:migration create_ips_table --create="ips"
+php artisan make:migration create_roles_table --create="roles"
+php artisan make:migration create_states_table --create="states"
+php artisan make:migration create_addresses_table --create="addresses"
+
+ejecutar php artisan migrate para crear las bases de datos referenciadas en el archivo .env
+php artisan migrate:fresh borra todas las tablas
+
+-----------------------------------------------------------------------------------------------
+crear controlador
+php artisan make:controller --resource AdminProductsController
+
+
+----------------------------------------------------------------------------------------------
+insertar estilos imagenes scripts en blade
+con el comando mix puedes copiar de resources a public
+copiar un solo archivo
+mix.copy('node_modules/foo/bar.css', 'public/css');
+copiar varios archivos
+mix.copy([
+    'src/foo/one.css',
+    'src/bar/two.css'
+], 'public/css');
+
+Copiar un directorio
+Un caso de uso común para esto es cuando desea mover un conjunto de fuentes, instaladas a través de NPM, a su directorio público.
+mix.copy('node_modules/vendor/fonts', 'public');
+
+sino los mueves manualmente y en el blade pon
+<img src="{{asset('cesta.png')}}" class="logo"></a> //esto estaria en public
+<link rel="stylesheet" href="{{asset('css/mercatavico.css')}}">//esto estaria en css/public
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Para enviar emails
+
+https://app.mailgun.com/app/account/setup
+mercatavico.com@gmail.com
+proyectodaw12
+https://app.mailgun.com/app/sending/domains/new
+
+lo requiere los mails en laravel ejecutar: composer require guzzlehttp/guzzle
+
+Por si da problemas de caché utilizar estos comandos o reiniciar apache
+para problemas de cache
+php artisan cache:clear
+php artisan route:clear
+php artisan view:clear
+php artisan config:clear
