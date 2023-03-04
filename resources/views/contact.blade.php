@@ -1,4 +1,7 @@
 @extends("layouts.main")
+@section('late_head')
+    {!! RecaptchaV3::initJs() !!}
+@endsection
 @section("content")
 
     <div class="container">
@@ -71,23 +74,13 @@
                         <input style="width: 20px;margin-left: 10px" type="checkbox" id="agree" name="agree" value="accept" required>
                     </div>
 
-                    <div class="full">
-                        <div class="captcha">
-                            <div class="spinner">
-                                <label>
-                                    <input type="checkbox" required>
-                                    <span class="checkmark"><span>&nbsp;</span></span>
-                                </label>
-                            </div>
-                            <div class="text">
-                                No soy un robot
-                            </div>
-                            <div class="capt">
-                                <img src="{{asset('sources/data/recaptcha.png')}}">
-                                <p>reCAPTCHA</p>
-                            </div>
-                        </div>
-                        <ul class="errors"></ul>
+                    <div class="form-group{{ $errors->has('g-recaptcha-response') ? ' has-error' : '' }}">
+                        {!! RecaptchaV3::field('contact') !!}
+                        @if ($errors->has('g-recaptcha-response'))
+                            <span class="help-block">
+                                        <strong>Error: {{ $errors->first('g-recaptcha-response') }}</strong>
+                                    </span>
+                        @endif
                     </div>
                     <div class="full">
                         <button class="button-send" style="width: 100%;height: 75px" type="button">Enviar consulta</button>
@@ -107,6 +100,7 @@
             data.append('email', $('input[name="email"]').val());
             data.append('phone', $('input[name="phone"]').val());
             data.append('msg', $('textarea[name="msg"]').val());
+            data.append('g-recaptcha-response', $('input[name="g-recaptcha-response"]').val());
             data.append('agree',$('#agree').is(':checked'));
 
             $.ajax({
@@ -128,7 +122,7 @@
                     $('#agree').prop('checked',false)
                 },
                 error: function (error) {
-
+                    console.log(error)
                     toastr.error(error.responseJSON.message);
                 }
             });
