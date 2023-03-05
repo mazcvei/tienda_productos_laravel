@@ -8,6 +8,7 @@
     <th scope="col">Precio</th>
     <th scope="col">Stock</th>
     <th scope="col">Estado</th>
+    <th scope="col">Materiales</th>
     <th scope="col">Editar/Borrar</th>
 </tr>
 </thead>
@@ -25,8 +26,29 @@
             <td>{{$producto->stock}} unidades</td>
             <td>{{$producto->state}}</td>
             <td>
+                @if($producto->materiales)
+                    <ul>
+                    @foreach($producto->materiales as $materialPivot)
+                        <li>{{$materialPivot->material->nombre}}</li>
+                    @endforeach
+                    </ul>
+                @endif
+            </td>
+            <td>
+                @php
+                        $arrayMateriales = [];
+                       if($producto->materiales){
+
+                           foreach($producto->materiales as $material){
+                               array_push($arrayMateriales,$material->material_id);
+                           }
+                           $arrayMateriales = implode(",",$arrayMateriales);
+                       }else{
+                           $arrayMateriales="";
+                       }
+                @endphp
                 <button class="btn btn-success edit_product" data-toggle="modal" data-target="#modalEditProducts" data-foto="{{$producto->foto}}"
-                        data-id="{{$producto->id}}" data-title="{{$producto->title}}" data-description="{{$producto->description}}"
+                        data-id="{{$producto->id}}" data-materiales="{{$arrayMateriales}}" data-title="{{$producto->title}}" data-description="{{$producto->description}}"
                         data-price="{{$producto->price}}" data-stock="{{$producto->stock}}" data-state="{{$producto->state}}" >Editar</button>
                 <button class="btn btn-danger deleteProduct"  data-id="{{$producto->id}}"  data-toggle="modal" data-target="#confirmDeleteModal">Eliminar</button>
             </td>
@@ -89,7 +111,6 @@
                             </div>
                         </div>
                         <div class="form-group col-12 col-md-6">
-
                             <div class="col-xs-6">
                                 <label for="state"><h4>Estado</h4></label>
                                 <select class="form-control" name="state_edit">
@@ -99,9 +120,18 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="form-group col-12 col-md-6">
+                            <div class="col-xs-6">
+                                <label for="state"><h4>Materiales (múltiple)</h4></label>
+                                <select class="form-control" id="inputSelectMaterialesEdit" name="materiales" multiple="multiple">
+                                    @foreach(\App\Models\Material::all() as $material)
+                                        <option value="{{$material->id}}">{{$material->nombre}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </form>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -130,7 +160,6 @@
 <script>
 
     $('.edit_product').click((e)=>{
-        console.log(e.currentTarget.dataset)
         $('.img-thumbnail_edit').attr('src','{{asset('storage/productsImages/')}}/'+e.currentTarget.dataset.foto)
         $('input[name="product_id"]').val(e.currentTarget.dataset.id)
         $('input[name="title_edit"]').val(e.currentTarget.dataset.title);
@@ -138,6 +167,44 @@
         $('input[name="price_edit"]').val(e.currentTarget.dataset.price);
         $('input[name="stock_edit"]').val(e.currentTarget.dataset.stock);
         $('select[name="state_edit"]').val(e.currentTarget.dataset.state);
+        console.log(e.currentTarget.dataset.materiales.split(','))
+        $('#inputSelectMaterialesEdit').val(e.currentTarget.dataset.materiales.split(','));
+    })
+
+    $('#btnUpdateProduct').click((e)=>{
+        console.log('evento update product')
+        let data = new FormData();
+        data.append('product_id', $('input[name="product_id"]').val());
+        data.append('title', $('input[name="title_edit"]').val());
+        data.append('foto', $('input[name="foto_edit"]')[0].files[0]);
+        data.append('descripcion', $('textarea[name="descripcion_edit"]').val());
+        data.append('price', $('input[name="price_edit"]').val());
+        data.append('stock', $('input[name="stock_edit"]').val());
+        data.append('state', $('select[name="state_edit"]').val());
+        data.append('materiales', $('#inputSelectMaterialesEdit').val());
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': '{{csrf_token()}}'
+            },
+            url: '{{route('product.update')}}',
+            type: 'post',
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (data) {
+                console.log('update ok')
+                $('#contentProductos').html(data.view)
+                $('#editProduct')[0].reset();
+                $('.img-thumbnail').attr('src','http://ssl.gstatic.com/accounts/ui/avatar_2x.png')
+                $('.modal-backdrop').remove()
+                $('body').removeClass('modal-open')
+                toastr.success(data.message);
+            },
+            error: function (error) {
+                console.log('update error')
+                toastr.error(error);
+            }
+        });
     })
     $('.deleteProduct').click((e)=>{
         $('input[name="product_id_delete_input"]').val(e.currentTarget.dataset.id)
@@ -166,53 +233,23 @@
             }
         })
     })
-    $('#btnUpdateProduct').click(()=>{
 
-        let data = new FormData();
-        data.append('product_id', $('input[name="product_id"]').val());
-        data.append('title', $('input[name="title_edit"]').val());
-        data.append('foto', $('input[name="foto_edit"]')[0].files[0]);
-        data.append('descripcion', $('textarea[name="descripcion_edit"]').val());
-        data.append('price', $('input[name="price_edit"]').val());
-        data.append('stock', $('input[name="stock_edit"]').val());
-        data.append('state', $('select[name="state_edit"]').val());
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': '{{csrf_token()}}'
-            },
-            url: '{{route('product.update')}}',
-            type: 'post',
-            contentType: false,
-            processData: false,
-            data: data,
-            success: function (data) {
-                console.log(data)
-                $('#contentProductos').html(data.view)
-                $('#editProduct')[0].reset();
-                $('.img-thumbnail').attr('src','http://ssl.gstatic.com/accounts/ui/avatar_2x.png')
-                $('.modal-backdrop').remove()
-                $('body').removeClass('modal-open')
-                toastr.success(data.message);
-            },
-            error: function (error) {
-                toastr.error(error);
+    var readURLEdit = function (input) {
+        if (input.files && input.files[0]) {
+            var readerEdit = new FileReader();
+
+            readerEdit.onload = function (e) {
+                console.log('dentro read')
+                console.log( $('.img-thumbnail_edit'))
+                $('.img-thumbnail_edit').attr('src', e.target.result);
             }
-        });
-        var readURL = function (input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
 
-                reader.onload = function (e) {
-                    $('.img-thumbnail_edit').attr('src', e.target.result);
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
+            readerEdit.readAsDataURL(input.files[0]);
         }
-        $("#foto_edit_input").change(()=>{
-            console.log('cambiandp')
-            readURL(this);
-        })
-    })
+    }
+    $("#foto_edit_input").on('change', function () {
+        console.log('evento')
+        readURLEdit(this);
+    });
 
 </script>

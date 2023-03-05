@@ -15,8 +15,9 @@ return new class extends Migration
     {
         Schema::create('pivot_materials_products', function (Blueprint $table) {
             $table->integerIncrements('id');
-            $table->unsignedInteger('product_id');
-            $table->unsignedInteger('material_id');
+            $table->Integer('product_id');
+            $table->Integer('material_id');
+            $table->timestamps();
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->foreign('material_id')->references('id')->on('materials')->onDelete('cascade');
             $table->engine ='innoDB';

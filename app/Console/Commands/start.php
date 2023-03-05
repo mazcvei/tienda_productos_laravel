@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Material;
 use App\Models\rol;
 use App\Models\user;
 use Illuminate\Console\Command;
@@ -38,13 +39,12 @@ class start extends Command
             }
         }
         foreach($roles as $rol){
-
             Rol::create([
                 'name'=>$rol
             ]);
         }
         echo "Roles creados\n";
-        $rolAdmin = Rol::where('name','Administrador')->first();
+        $rolAdmin = Rol::where('name','administrador')->first();
         $admins = User::where('rol_id',$rolAdmin->id)->get();
         if(count($admins)==0 && $rolAdmin){
             User::create([
@@ -56,7 +56,17 @@ class start extends Command
             echo "Usuario administrador creado\n";
         }
 
-        $materiales = ['madera','caucho','metal','acero','zinc'];
+        $materiales = Material::all();
+        if(count($materiales)==0){
+            $materiales = ['Madera','Caucho','Metal','Acero','Zinc'];
+            foreach($materiales as $material){
+                Material::create([
+                    'nombre'=>$material
+                ]);
+            }
+            echo "Materiales creados\n";
+        }
+
         //Añadir materiales: Madera, caucho, metal, acero, zinc
 
         return Command::SUCCESS;

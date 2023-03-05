@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\MaterialPivot;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -23,10 +24,9 @@ class ProductController extends Controller
         if($request->file('foto')){
             $path=Str::random(15).time().$request->file('foto')->getClientOriginalExtension();
             Storage::putFileAs('public/productsImages', $request->file('foto'),$path);
-
         }
 
-        Product::create([
+       $product = Product::create([
             'user_id'=>Auth::id(),
             'foto'=>$path,
             'title'=>$request->title,
@@ -35,6 +35,16 @@ class ProductController extends Controller
             'stock'=>$request->stock,
             'state'=>$request->state,
         ]);
+        if($request->materiales){
+            $materiales =  explode(',',$request->materiales);
+            foreach($materiales as $material_id){
+                MaterialPivot::create([
+                    'product_id'=>$product->id,
+                    'material_id'=>$material_id,
+                ]);
+            }
+        }
+
         $userProducts = User::find(Auth::id())->productos;
         $html = view('profile._partial_mis_productos',compact('userProducts'))->render();
 
@@ -42,6 +52,7 @@ class ProductController extends Controller
     }
 
     public function update(Request $request){
+
         $product = Product::find($request->product_id);
         if($product->user_id==Auth::id()){
 
@@ -50,6 +61,22 @@ class ProductController extends Controller
                 Storage::putFileAs('public/productsImages', $request->file('foto'),$path);
                 $product->foto = $path;
 
+            }
+            if($request->materiales){
+                $materiales =  explode(',',$request->materiales);
+                foreach($product->materiales as $old){
+                    $old->delete();
+                }
+                foreach($materiales as $material_id){
+                    if(!MaterialPivot::where('product_id',$product->id)
+                        ->where('material_id',$material_id)->first()){
+                        MaterialPivot::create([
+                            'product_id'=>$product->id,
+                            'material_id'=>$material_id,
+                        ]);
+                    }
+
+                }
             }
             $product->title = $request->title;
             $product->description = $request->descripcion;
@@ -60,7 +87,7 @@ class ProductController extends Controller
             $userProducts = User::find(Auth::id())->productos;
             $html = view('profile._partial_mis_productos',compact('userProducts'))->render();
 
-            return response()->json(['message'=>'Producto creado correctamente.','view'=>$html]);
+            return response()->json(['message'=>'Producto actualizado correctamente.','view'=>$html]);
         }else{
             return response()->json(['message'=>'No tienes permisos.'],403);
         }

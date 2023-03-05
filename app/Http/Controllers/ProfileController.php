@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Material;
 use App\Models\User;
 use App\Models\UserAddress;
 use Illuminate\Http\RedirectResponse;
@@ -22,10 +23,12 @@ class ProfileController extends Controller
 
         $userProducts = Auth::user()->productos;
         $usuarios =User::all();
+        $materiales =Material::all();
         return view('profile.edit', [
             'user' => Auth::user(),
             'userProducts' =>$userProducts,
             'usuarios' =>$usuarios,
+            'materials' =>$materiales,
         ]);
     }
 

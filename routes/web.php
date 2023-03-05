@@ -3,6 +3,7 @@
 use App\Http\Controllers\contactController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/product-store', [ProductController::class, 'store'])->name('product.store');
     Route::post('/product-update', [ProductController::class, 'update'])->name('product.update');
     Route::post('/product-destroy', [ProductController::class, 'destroy'])->name('product.destroy');
+    Route::post('/change-status-user', [UserController::class, 'changeRol'])->name('change.rol');
 });
 
 require __DIR__.'/auth.php';

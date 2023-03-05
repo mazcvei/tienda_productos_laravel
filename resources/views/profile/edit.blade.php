@@ -5,17 +5,15 @@
             display: inline-block;
             margin-bottom: .1rem;
         }
-
         .card {
             text-align: center;
         }
-
-
+        .contenedor_datos{
+            margin-top: 50px;height: 50vh;overflow: auto;
+        }
     </style>
     <div class="container">
-
         <div class="row">
-
             <div class="col-12 col-md-8" style="margin:auto">
                 <div class="card">
                     <div class="card-head" style="text-align: center">
@@ -122,7 +120,7 @@
                 <button class="btn btn-primary" data-toggle="modal" data-target="#modalAddProducts">Añadir
                     producto
                 </button>
-                    <div id="contentProductos" style="margin-top: 50px">
+                    <div id="contentProductos" class="contenedor_datos">
                         @include('profile._partial_mis_productos',$userProducts)
                     </div>
             </div>
@@ -130,8 +128,16 @@
                 <div class="col-12" style="text-align: center;margin-top: 50px">
                     <h1>Usuarios</h1>
 
-                    <div id="contentProductos" style="margin-top: 50px">
+                    <div id="contentUsers" style="margin-top: 50px">
                         @include('profile._partial_usuarios',$userProducts)
+                    </div>
+                </div>
+
+                <div class="col-12" style="text-align: center;margin-top: 50px">
+                    <h1>Materiales</h1>
+
+                    <div id="contentMaterials" style="margin-top: 50px">
+                        @include('profile._partial_materials',$materials)
                     </div>
                 </div>
             @endif
@@ -154,7 +160,7 @@
                         <div class="row" style="width: 100%">
 
                             <div class="form-group col-12" style="text-align: center">
-                                <img style="width:250px" src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png"
+                                <img style="width:200px" src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png"
                                      class="avatar img-circle img-thumbnail" alt="image">
                                 <h6>Añade una foto</h6>
                                 <input type="file" name="foto" accept="image/*" class="text-center center-block file-upload">
@@ -196,13 +202,23 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="form-group col-12 col-md-6">
+                                <div class="col-xs-6">
+                                    <label for="state"><h4>Materiales (múltiple)</h4></label>
+                                    <select class="form-control" id="inputSelectMateriales" name="materiales" multiple="multiple">
+                                        @foreach($materials as $material)
+                                            <option value="{{$material->id}}">{{$material->nombre}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </form>
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="btnSaveProduct">Guardar producto</button>
+                    <button type="button" class="btn btn-primary" id="btnSaveProduct" data-dismiss="modal">Guardar producto</button>
                 </div>
             </div>
         </div>
@@ -263,6 +279,7 @@
             data.append('price', $('input[name="price"]').val());
             data.append('stock', $('input[name="stock"]').val());
             data.append('state', $('select[name="state"]').val());
+            data.append('materiales', $('#inputSelectMateriales').val());
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': '{{csrf_token()}}'
@@ -276,9 +293,7 @@
                     console.log(data)
                     $('#contentProductos').html(data.view)
                     $('#addProduct')[0].reset();
-                    $('.img-thumbnail').attr('src','')
-                    $('#modalAddProducts').modal('toggle')
-
+                    $('.img-thumbnail').attr('src','http://ssl.gstatic.com/accounts/ui/avatar_2x.png')
                     toastr.success(data.message);
                 },
                 error: function (error) {
@@ -286,6 +301,8 @@
                 }
             });
         })
+
+
 
 
 
