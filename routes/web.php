@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\contactController;
+use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
@@ -37,7 +38,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/product-store', [ProductController::class, 'store'])->name('product.store');
     Route::post('/product-update', [ProductController::class, 'update'])->name('product.update');
     Route::post('/product-destroy', [ProductController::class, 'destroy'])->name('product.destroy');
+    Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
     Route::post('/change-status-user', [UserController::class, 'changeRol'])->name('change.rol');
+    Route::post('/user-update', [UserController::class, 'update'])->name('user.update');
+    Route::post('/user-destroy', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::post('/store-material', [MaterialController::class, 'add'])->name('add.material');
+    Route::post('/update-material', [MaterialController::class, 'update'])->name('material.update');
+    Route::post('/destroy-material', [MaterialController::class, 'destroy'])->name('material.destroy');
 });
 
 require __DIR__.'/auth.php';

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Material;
+use App\Models\Product;
 use App\Models\User;
 use App\Models\UserAddress;
 use Illuminate\Http\RedirectResponse;
@@ -20,8 +21,11 @@ class ProfileController extends Controller
      */
     public function edit(): View
     {
-
-        $userProducts = Auth::user()->productos;
+        if(Auth::user()->rol->name=='Administrador'){
+            $userProducts = Product::all();
+        }else{
+            $userProducts = Auth::user()->productos;
+        }
         $usuarios =User::all();
         $materiales =Material::all();
         return view('profile.edit', [
@@ -38,6 +42,15 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         //dd($request->all());
+        $request->validate([
+            'email'=>'required|email|max:250',
+            'ciudad'=>'required|max:250',
+            'cp'=>'required|max:10',
+        ],[],[
+            'address'=>'Dirección',
+            'ciudad'=>'Ciudad',
+            'cp'=>'Código postal',
+        ]);
         $user = Auth::user();
         $user->name= $request->name;
         $user->email= $request->email;

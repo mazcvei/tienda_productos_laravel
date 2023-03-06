@@ -16,7 +16,7 @@ class ProductController extends Controller
 
     public function index(){
         $productos = Product::all();
-        return view('products',compact('productos'));
+        return view('products.index',compact('productos'));
     }
     public function store(Request $request){
 
@@ -52,10 +52,8 @@ class ProductController extends Controller
     }
 
     public function update(Request $request){
-
         $product = Product::find($request->product_id);
         if($product->user_id==Auth::id()){
-
             if($request->file('foto')){
                 $path=Str::random(15).time().$request->file('foto')->getClientOriginalExtension();
                 Storage::putFileAs('public/productsImages', $request->file('foto'),$path);
@@ -84,7 +82,11 @@ class ProductController extends Controller
             $product->stock = $request->stock;
             $product->state = $request->state;
             $product->save();
-            $userProducts = User::find(Auth::id())->productos;
+            if(Auth::user()->rol->name=='Administrador'){
+                $userProducts = Product::all();
+            }else{
+                $userProducts = User::find(Auth::id())->productos;
+            }
             $html = view('profile._partial_mis_productos',compact('userProducts'))->render();
 
             return response()->json(['message'=>'Producto actualizado correctamente.','view'=>$html]);
@@ -98,11 +100,33 @@ class ProductController extends Controller
         $product = Product::find($request->product_id);
         if($product->user_id==Auth::id()){
             $product->delete();
-            $userProducts = User::find(Auth::id())->productos;
+            if(Auth::user()->rol->name=='Administrador'){
+                $userProducts = Product::all();
+            }else{
+                $userProducts = User::find(Auth::id())->productos;
+            }
             $html = view('profile._partial_mis_productos',compact('userProducts'))->render();
 
             return response()->json(['message'=>'Producto eliminado correctamente.','view'=>$html]);
         }
 
+    }
+
+    public function show($productId){
+        $producto = Product::find($productId);
+        if($productId){
+            return view('products.single',compact('producto'));
+        }else{
+            return redirect()->back();
+        }
+
+    }
+
+    public function filter(Request $request){
+        if(Auth::user()->rol->name=='Administrador'){
+
+        }else{
+
+        }
     }
 }

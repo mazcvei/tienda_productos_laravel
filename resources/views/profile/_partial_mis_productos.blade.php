@@ -8,6 +8,7 @@
     <th scope="col">Precio</th>
     <th scope="col">Stock</th>
     <th scope="col">Estado</th>
+    <th scope="col">Usuario</th>
     <th scope="col">Materiales</th>
     <th scope="col">Editar/Borrar</th>
 </tr>
@@ -21,10 +22,11 @@
                 <img style="width: 90px" src="{{asset('storage/productsImages/'.$producto->foto)}}">
             </th>
             <td>{{$producto->title}}</td>
-            <td>{{$producto->description}}</td>
+            <td>{{\Illuminate\Support\Str::limit($producto->description,50)}}</td>
             <td>{{$producto->price}}€</td>
             <td>{{$producto->stock}} unidades</td>
             <td>{{$producto->state}}</td>
+            <td>{{$producto->user->name.' - '.$producto->user->email}}</td>
             <td>
                 @if($producto->materiales)
                     <ul>

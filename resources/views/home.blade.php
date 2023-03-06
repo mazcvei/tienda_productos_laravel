@@ -1,6 +1,10 @@
 @extends("layouts.main")
 @section("content")
-
+    <style>
+        p {
+            margin: unset;
+        }
+    </style>
     <section class="video">
         <video loop="true" autoplay="autoplay" muted>
             <source src="{{asset('sources/data/mercatavico.mp4')}}" type="video/mp4">
@@ -19,20 +23,22 @@
     <div class="container">
         <div class="row">
             @foreach($productos as $producto)
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-4" style="margin-top: 40px">
                     <div class="card" style="width: 18rem;">
                         <div class="card-head">
                             <img style="width:100%;height: 200px;object-fit: cover" src="{{asset('storage/productsImages/'.$producto->foto)}}">
                         </div>
                         <div class="card-body" style="text-align: start">
                             <h3>{{$producto->title}}</h3>
-                            <p>{{$producto->description}}</p>
+                            <p>{{\Illuminate\Support\Str::limit($producto->description,100)}}</p>
                             <p>{{$producto->price}}€</p>
                         </div>
                         <div class="card-footer" style="text-align: center">
+                            <a class="btn btn-success" href="{{route('product.show',$producto->id)}}">Ver producto</a>
                             @auth
                                 <button type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Añadir al carrito</button>
                             @endauth
+
                         </div>
 
                     </div>

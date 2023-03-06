@@ -116,7 +116,11 @@
                 </div>
             </div>
             <div class="col-12" style="text-align: center;margin-top: 50px">
-                <h1>Mis productos</h1>
+                @if(\Illuminate\Support\Facades\Auth::user()->rol->name=="administrador")
+                    <h1>Todos los productos</h1>
+                @else
+                    <h1>Miss productos</h1>
+                @endif
                 <button class="btn btn-primary" data-toggle="modal" data-target="#modalAddProducts">Añadir
                     producto
                 </button>
@@ -135,7 +139,9 @@
 
                 <div class="col-12" style="text-align: center;margin-top: 50px">
                     <h1>Materiales</h1>
-
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#modalAddMaterial">Añadir
+                        material
+                    </button>
                     <div id="contentMaterials" style="margin-top: 50px">
                         @include('profile._partial_materials',$materials)
                     </div>
@@ -144,7 +150,7 @@
         </div>
     </div>
 
-    <!-- Modal -->
+    <!--  Modal Add product -->
     <div class="modal fade" id="modalAddProducts" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -223,10 +229,38 @@
             </div>
         </div>
     </div>
+    <!-- Modal Add material-->
+    <div class="modal fade" id="modalAddMaterial" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Añadir material</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editMaterial">
+                        <div class="row" style="width: 100%">
+                            <div class="form-group col-12 col-md-6">
+                                <div class="col-xs-6">
+                                    <label for="title"><h4>Nombre</h4></label>
+                                    <input type="text" class="form-control" name="add_product_name" id="product_name">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
 
-
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="btnAddMaterial" data-dismiss="modal">Guardar material</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
-
 @section('javascript')
     <script>
         $('#btn_submit_user').click(() => {
@@ -252,7 +286,7 @@
                     toastr.success(data.message);
                 },
                 error: function (error) {
-                    toastr.error(error);
+                    toastr.error(error.responseJSON.message);
                 }
             });
         })
@@ -302,7 +336,28 @@
             });
         })
 
+        $('#btnAddMaterial').click(()=>{
+            let data = new FormData();
+            data.append('material_name', $('input[name="add_product_name"]').val());
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                },
+                url: '{{route('add.material')}}',
+                type: 'post',
+                contentType: false,
+                processData: false,
+                data: data,
+                success: function (data) {
+                    $('#contentMaterials').html(data.view)
+                    toastr.success(data.message);
+                },
+                error: function (error) {
+                    toastr.error(error.responseJSON.message);
+                }
+            });
 
+        })
 
 
 

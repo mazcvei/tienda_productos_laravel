@@ -13,5 +13,8 @@ class Product extends Model
     public function materiales(){
         return $this->hasMany(MaterialPivot::class,'product_id','id');
     }
+    public function user(){
+        return $this->belongsTo(User::class,'user_id','id');
+    }
 
 }
