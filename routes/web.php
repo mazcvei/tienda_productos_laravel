@@ -4,6 +4,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\contactController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\PayPalCardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
@@ -20,6 +21,15 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+config_path('paypal');
+Route::get('/test', function () {
+   dd(config('paypal'));
+})->name('test');
+
+//paypal
+Route::get('/pay', [PayPalCardController::class, 'index'])->name('pago');
+Route::post('paypal', [PayPalCardController::class, 'payWithpaypal'])->name('paypal');
+Route::get('status', [PayPalCardController::class, 'getPaymentStatus']);
 
 Route::get('/', function () {
     $productos = Product::all();
@@ -57,6 +67,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/carrito', [CartController::class, 'index'])->name('cart.index');
     Route::get('/add-cart/{productId}', [CartController::class, 'add'])->name('cart.add');
+
+    Route::get('/paypal/process/{orderId}', 'PayPalCardController@process')->name('paypal.process');
 
 });
 

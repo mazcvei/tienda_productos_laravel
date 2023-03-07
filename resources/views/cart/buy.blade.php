@@ -1,4 +1,5 @@
 @extends("layouts.main")
+
 @section("content")
 
     <div class="container">
@@ -71,14 +72,23 @@
                         <td>   </td>
                         <td>   </td>
                         <td>
-                            <button type="button" class="btn btn-success">
-                                Pagar <span class="glyphicon glyphicon-play"></span>
-                            </button></td>
+                            <form method="POST" class="row" id="payment-form" action="{{route('paypal')}}">
+                                {{ csrf_field() }}
+                                <button type="submit" class="btn btn-success">
+                                    Pagar <span class="glyphicon glyphicon-play"></span>
+                                </button>
+                            </form>
+
+
+                        </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
+@endsection
+@section('javascript')
 
 @endsection
