@@ -13,13 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('order_details', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->integerIncrements('id');
-            $table->unsignedInteger('product_id');
-            $table->unsignedInteger('order_id');
-            $table->Integer('quantity');
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+            $table->string('payment_id');
+            $table->string('payer_id');
+            $table->string('payer_email');
+            $table->float('amount', 10, 2);
+            $table->string('currency');
+            $table->string('payment_status');
             $table->timestamps();
             $table->engine ='innoDB';
         });
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('payments');
     }
 };

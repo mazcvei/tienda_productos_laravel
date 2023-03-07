@@ -4,7 +4,7 @@
 <body>
 
     @include('layouts.header')
-
+    @include('layouts.flash-message')
     @yield("content")
 
     @include('layouts.scripts')

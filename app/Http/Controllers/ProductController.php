@@ -82,7 +82,7 @@ class ProductController extends Controller
             $product->stock = $request->stock;
             $product->state = $request->state;
             $product->save();
-            if(Auth::user()->rol->name=='Administrador'){
+            if(Auth::user()->rol->name=='administrador'){
                 $userProducts = Product::all();
             }else{
                 $userProducts = User::find(Auth::id())->productos;
@@ -100,7 +100,7 @@ class ProductController extends Controller
         $product = Product::find($request->product_id);
         if($product->user_id==Auth::id()){
             $product->delete();
-            if(Auth::user()->rol->name=='Administrador'){
+            if(Auth::user()->rol->name=='administrador'){
                 $userProducts = Product::all();
             }else{
                 $userProducts = User::find(Auth::id())->productos;
@@ -123,7 +123,7 @@ class ProductController extends Controller
     }
 
     public function filter(Request $request){
-        if(Auth::user()->rol->name=='Administrador'){
+        if(Auth::user()->rol->name=='administrador'){
 
         }else{
 

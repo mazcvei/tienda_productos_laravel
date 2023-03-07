@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Material;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\UserAddress;
@@ -21,10 +22,12 @@ class ProfileController extends Controller
      */
     public function edit(): View
     {
-        if(Auth::user()->rol->name=='Administrador'){
+        if(Auth::user()->rol->name=='administrador'){
             $userProducts = Product::all();
+            $pedidos = Order::all();
         }else{
             $userProducts = Auth::user()->productos;
+            $pedidos = Auth::user()->orders;
         }
         $usuarios =User::all();
         $materiales =Material::all();
@@ -33,6 +36,7 @@ class ProfileController extends Controller
             'userProducts' =>$userProducts,
             'usuarios' =>$usuarios,
             'materials' =>$materiales,
+            'pedidos' =>$pedidos,
         ]);
     }
 

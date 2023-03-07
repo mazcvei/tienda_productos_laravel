@@ -103,6 +103,13 @@
                                         <ul class="errors"></ul>
                                     </div>
                                 </div>
+                                <div class="col-12">
+                                    <p>Mis puntos canjeables:
+                                        <span style="font-size: 20px;font-weight: bold">
+                                            {{\Illuminate\Support\Facades\Auth::user()->credits}}
+                                        </span>
+                                    </p>
+                                </div>
                             </div>
                             <br>
                             <ul class="errors"></ul>
@@ -147,6 +154,44 @@
                     </div>
                 </div>
             @endif
+            <div class="col-12" style="text-align: center;margin-top: 50px">
+                @if(\Illuminate\Support\Facades\Auth::user()->rol->name=="administrador")
+                <h1>Todos los pedidos</h1>
+                @else
+                    <h1>Mis pedidos</h1>
+                @endif
+                <div id="contentPedidos" style="margin-top: 50px">
+                    <table class="table" id="tableOrders">
+
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Usuario</th>
+                            <th scope="col">Transaccion</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Fecha</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @if(count($pedidos)>0)
+                            @foreach($pedidos as $pedido)
+                                <tr>
+                                    <td>{{$pedido->id}}</td>
+                                    <td>{{$pedido->user->name}}</td>
+                                    <td>{{$pedido->transaction}}</td>
+                                    <td>{{number_format($pedido->total,2,',','.')}}€</td>
+                                    <td>{{\Carbon\Carbon::parse($pedido->created_at)->format('d-m-Y H:i:s')}}</td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <p>No hay pedidos</p>
+
+                        @endif
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -264,7 +309,6 @@
 @section('javascript')
     <script>
         $('#btn_submit_user').click(() => {
-            console.log($('input[name="_token"]').val())
             let data = new FormData();
             data.append('name', $('input[name="name"]').val());
             data.append('email', $('input[name="email"]').val());

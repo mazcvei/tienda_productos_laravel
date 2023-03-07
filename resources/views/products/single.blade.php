@@ -29,10 +29,36 @@
                 <p style="font-weight: bold;font-size: 16px">Precio: {{$producto->price}}€</p>
 
                 @auth
-                    <button type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Añadir al carrito</button>
+                    @if($producto->user->id!=\Illuminate\Support\Facades\Auth::id())
+                    <button type="button" class="btn btn-primary addCartBtn" data-product_id="{{$producto->id}}"><i class="fa fa-plus"></i> Añadir al carrito</button>
+                    @endif
                 @endauth
             </div>
         </div>
     </div>
+
+@endsection
+@section('javascript')
+    <script>
+        $('.addCartBtn').click((e)=>{
+            let product_id = e.currentTarget.dataset.product_id;
+            let url = '{{ route("cart.add", ":product_id") }}';
+            url = url.replace(':product_id', product_id);
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                },
+                url: url,
+                type: 'get',
+                success: function (data) {
+                    $('#numItemsCart').text(data.numItems)
+                    toastr.success(data.message);
+                },
+                error: function (error) {
+                    toastr.error(error.responseJSON.message);
+                }
+            });
+        })
+    </script>
 
 @endsection

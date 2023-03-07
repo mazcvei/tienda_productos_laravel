@@ -2,221 +2,149 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
+use App\Models\OrderDetail;
+use App\Models\Payment;
+use App\Models\User;
+use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
-use PayPal\Api\Amount;
-use PayPal\Api\Details;
-use PayPal\Api\Item;
+
 
 /** All Paypal Details class **/
 
-use PayPal\Api\ItemList;
-use PayPal\Api\Payer;
-use PayPal\Api\Payment;
-use PayPal\Api\PaymentExecution;
-use PayPal\Api\RedirectUrls;
-use PayPal\Api\Transaction;
-use PayPal\Auth\OAuthTokenCredential;
-use PayPal\Rest\ApiContext;
+
 use Illuminate\Support\Facades\Config;
+use Omnipay\Omnipay;
 use Symfony\Component\Console\Input\Input;
 
 class PayPalCardController extends Controller
 {
-    private $_api_context;
+    private $gateway;
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
-        /** PayPal api context **/
-        $paypal_conf =  config('paypal');
-        $this->_api_context = new ApiContext(new OAuthTokenCredential(
-                $paypal_conf['client_id'],
-                $paypal_conf['secret'])
-        );
-        $this->_api_context->setConfig($paypal_conf['settings']);
+        $this->gateway = Omnipay::create('PayPal_Rest');
+        $this->gateway->setClientId(env('PAYPAL_CLIENT_ID'));
+        $this->gateway->setSecret(env('PAYPAL_CLIENT_SECRET'));
+        $this->gateway->setTestMode(true); //set it to 'false' when go live
     }
 
-    public function payWithpaypal(Request $request)
+    /**
+     * Call a view.
+     */
+    public function index()
     {
+        return view('payment');
+    }
 
-        $payer = new Payer();
-        $payer->setPaymentMethod('paypal');
+    /**
+     * Initiate a payment on PayPal.
+     *
+     * @param \Illuminate\Http\Request $request
+     */
+    public function charge(Request $request)
+    {
+        if ($request->input('submit'))
+            $cartItems = Auth::user()->cartItems;
 
-        $item_1 = new Item();
-
-        $item_1->setName('Compra Mercadovico')/** AQUI DESCRIPCION DE LA COMPRA **/
-        ->setCurrency('EUR')
-            ->setQuantity(1)
-            ->setPrice(session()->get('amount'));
-        /** unit price **/
-
-        $item_list = new ItemList();
-        $item_list->setItems(array($item_1));
-
-        $amount = new Amount();
-        $amount->setCurrency('EUR')
-            ->setTotal(500);
-
-        $transaction = new Transaction();
-        $transaction->setAmount($amount)
-            ->setItemList($item_list)
-            ->setDescription('Compra mercadovico1');
-
-        $redirect_urls = new RedirectUrls();
-        $redirect_urls->setReturnUrl(URL::to('/'))/** Specify return URL **/
-        ->setCancelUrl(URL::to('/'));
-
-        $payment = new Payment();
-        $payment->setIntent('Sale')
-            ->setPayer($payer)
-            ->setRedirectUrls($redirect_urls)
-            ->setTransactions(array($transaction));
-        /** dd($payment->create($this->_api_context));exit; **/
-
+        if (count($cartItems) == 0) {
+            return \redirect()->back()->with('warning', 'No tienes ningún elemento en el carrito.');
+        }
 
         try {
+            //TODO=>Restar del amunt, el numero de créditos, si amount queda negativo, restar todos los creditos
+            $response = $this->gateway->purchase(array(
+                'amount' => $request->input('amount'),
+                'currency' => env('PAYPAL_CURRENCY'),
+                'returnUrl' => url('success'),
+                'cancelUrl' => url('error'),
+            ))->send();
 
-            $payment->create($this->_api_context);
-
-        } catch (\PayPal\Exception\PPConnectionException $ex) {
-
-            if (Config::get('app.debug')) {
-
-                Session::put('error', 'Connection timeout');
-                return Redirect::to('/');
-
+            if ($response->isRedirect()) {
+                $response->redirect(); // this will automatically forward the customer
             } else {
-
-                Session::put('error', 'Some error occur, sorry for inconvenient');
-                return Redirect::to('/'); //hacer pagina de error
-
+                // not successful
+                return $response->getMessage();
             }
-
+        } catch (Exception $e) {
+            return $e->getMessage();
         }
-
-        foreach ($payment->getLinks() as $link) {
-
-            if ($link->getRel() == 'approval_url') {
-
-                $redirect_url = $link->getHref();
-                break;
-
-            }
-
-        }
-
-        /** add payment ID to session **/
-        Session::put('paypal_payment_id', $payment->getId());
-
-        if (isset($redirect_url)) {
-
-            /** redirect to paypal **/
-            return Redirect::away($redirect_url);
-
-        }
-
-        Session::put('error', 'Unknown error occurred');
-        return Redirect::to('/');
 
     }
 
-    public function getPaymentStatus()
+    /**
+     * Charge a payment and store the transaction.
+     *
+     * @param \Illuminate\Http\Request $request
+     */
+    public function success(Request $request)
     {
-        /** Get the payment ID before session clear **/
-        $payment_id = Session::get('paypal_payment_id');
+        // Once the transaction has been approved, we need to complete it.
+        if ($request->input('paymentId') && $request->input('PayerID')) {
+            $transaction = $this->gateway->completePurchase(array(
+                'payer_id' => $request->input('PayerID'),
+                'transactionReference' => $request->input('paymentId'),
+            ));
+            $response = $transaction->send();
 
-        /** clear the session payment ID **/
-        Session::forget('paypal_payment_id');
-        if (empty(Input::get('PayerID')) || empty(Input::get('token'))) {
+            if ($response->isSuccessful()) {
+                // El cliente ha completado el pago
+                $arr_body = $response->getData();
+                // Inserta los datos de transaccion en la bd
+                $payment = Payment::create([
+                    'payment_id' => $arr_body['id'],
+                    'payer_id' => $arr_body['payer']['payer_info']['payer_id'],
+                    'payer_email' => $arr_body['payer']['payer_info']['email'],
+                    'amount' => $arr_body['transactions'][0]['amount']['total'],
+                    'currency' => env('PAYPAL_CURRENCY'),
+                    'payment_status' => $arr_body['state'],
+                ]);
 
-            Session::put('error', 'Payment failed');
-            return Redirect::to('/');
+                $order = Order::create([
+                    'user_id' => Auth::id(),
+                    'transaction' => $payment->payment_id,
+                    'total' => $payment->amount,
+                    'pay' => 1,
+                    'payment_id' => $payment->id,
+                ]);
+                $cartItems = Auth::user()->cartItems;
+                foreach ($cartItems as $item) {
+                    OrderDetail::create([
+                        'product_id' => $item->product_id,
+                        'order_id' => $order->id,
+                        'quantity' => $item->quantity,
+                    ]);
+                    if ($item->product->user->rol->name == "usuario_registrado") {
+                        $user = User::find($item->product->user->id);
+                        $user->credits += ($item->product->price * $item->quantity) / 2;
+                        $user->save();
+                    }
+                    $item->delete();
+                }
 
+                return redirect()->route('profile.edit')
+                    ->with('success', 'Pedido realizado correctamente');
+
+            } else {
+                return $response->getMessage();
+            }
+        } else {
+            return redirect()->route('cart.index')->with('error', 'Pago cancelado.');
         }
+    }
 
-        $payment = Payment::get($payment_id, $this->_api_context);
-        $execution = new PaymentExecution();
-        $execution->setPayerId(Input::get('PayerID'));
-
-        /**Execute the payment **/
-        $result = $payment->execute($execution, $this->_api_context);
-
-        if ($result->getState() == 'approved') { // se ejecuta si pago correcto ->registro pedido bbdd y return
-            Log::info("Pago ok, almacenando bd");
-            /*
-            $date = Carbon::now();
-            $date = $date->format('d-M-Y h:i:s');
-            $pedido = new Pedidos;
-            $componentes = "";
-            foreach (session()->get('componentes') as $nombre => $precio) {
-                $componentes .= $nombre . ": " . $precio . "€. ";
-            }
-
-            $pedido->descripcionPedido = "Servicio: " . session('modelo') . " - Componentes: " . $componentes;
-            $pedido->direccion = session()->get('direccion');
-            $pedido->movil = session()->get('movil');
-            $pedido->precio = session()->get('amount');
-            $pedido->pagado = 1;
-            $pedido->usuario = session()->get('idusuario');
-            $pedido->email = session()->get('email');
-            $pedido->realizado = $date;
-            $pedido->comentarios = session()->get('comentarios');
-            $pedido->estado = "Verificando el pago";
-
-            $pedido->save();
-            session(['referencia' => $pedido->idPedido]);
-            $usuario = Usuarios::find(session()->get('idusuario'));
-            $usuario->puntos = ($usuario->puntos)+round(session()->get('amount'));
-            $usuario->save();
-
-            if (session('puntoscanjeados') == 1) {
-                $usuario = Usuarios::find(session()->get('idusuario'));
-                $usuario->puntos = $usuario->puntos - 150;
-                $usuario->save();
-                session()->forget('puntoscanjeados');
-            }
-
-            if (session('codigoverificado') == 1) {
-                //  dd(session()->get('codigousado'));
-                $codigo = Codigos::find(session()->get('codigousado'));
-
-                $codigo->usado = 1;
-                $codigo->usuario_id = session()->get('idusuario');
-                $codigo->save();
-                session()->forget('codigousado');
-                session()->forget('puntoscanjeados');
-                session()->forget('codigoverificado');
-
-            }
-
-            $this->sendEmailOrder();
-            session()->forget('referencia');
-            session()->forget('componentes');
-            session()->forget('precio');
-            session()->forget('comentarios');
-            session()->forget('direccion');
-            session()->forget('modelo');
-            session()->forget('precio');
-            session()->forget('a_resumen_pedido');
-            */
-
-            //\Session::put('success', 'Payment success');
-            session(['mensaje' => "Pedido realizado correctamente, accede al área cliente para consultar el estado."]);
-            return redirect('/');
-        }
-
-        Session::put('error', 'Pago fallido');
-        return Redirect::to('/');
-
+    /**
+     * Error Handling.
+     */
+    public function error()
+    {
+        return route('cart.index')->with('error', 'Pago cancelado.');
     }
 
 

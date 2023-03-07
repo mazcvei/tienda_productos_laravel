@@ -36,7 +36,9 @@
                         <div class="card-footer" style="text-align: center">
                             <a class="btn btn-success" href="{{route('product.show',$producto->id)}}">Ver producto</a>
                             @auth
+                                @if($producto->user->id!=\Illuminate\Support\Facades\Auth::id())
                                 <button type="button" data-product_id="{{$producto->id}}" class="btn btn-primary addCartBtn"><i class="fa fa-plus"></i> Añadir al carrito</button>
+                                @endif
                             @endauth
 
                         </div>
@@ -80,7 +82,7 @@
                     toastr.success(data.message);
                 },
                 error: function (error) {
-                    toastr.error('Ha ocurrido un error.');
+                    toastr.error(error.responseJSON.message);
                 }
             });
         })

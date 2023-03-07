@@ -27,9 +27,9 @@ Route::get('/test', function () {
 })->name('test');
 
 //paypal
-Route::get('/pay', [PayPalCardController::class, 'index'])->name('pago');
-Route::post('paypal', [PayPalCardController::class, 'payWithpaypal'])->name('paypal');
-Route::get('status', [PayPalCardController::class, 'getPaymentStatus']);
+
+
+
 
 Route::get('/', function () {
     $productos = Product::all();
@@ -67,8 +67,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/carrito', [CartController::class, 'index'])->name('cart.index');
     Route::get('/add-cart/{productId}', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/destroy-cart/', [CartController::class, 'destroy'])->name('cart.destroy');
 
-    Route::get('/paypal/process/{orderId}', 'PayPalCardController@process')->name('paypal.process');
+    Route::get('payment', [PayPalCardController::class, 'index'])->name('pago');
+    Route::post('charge', [PayPalCardController::class, 'charge'])->name('paypal');
+    Route::get('success', [PayPalCardController::class, 'success']);
+    Route::get('error', [PayPalCardController::class, 'error']);
 
 });
 
