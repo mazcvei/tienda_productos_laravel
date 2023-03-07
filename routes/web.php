@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\contactController;
+use App\Http\Controllers\IndexController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -31,6 +33,13 @@ Route::get('/dashboard', function () {
 Route::get('/contacto', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/sendemail', [ContactController::class, 'enviarCorreo'])->name('send.email');
 Route::get('/productos', [ProductController::class, 'index'])->name('products.index');
+
+Route::get('/aviso-legal', [IndexController::class, 'showAvisoLegal'])->name('aviso.legal');
+Route::get('/prolitica-de-privacidad', [IndexController::class, 'showPrivacidad'])->name('privacidad');
+Route::get('/politica-de-cookies', [IndexController::class, 'showCookies'])->name('cookies');
+Route::get('/sobre-nosotros', [IndexController::class, 'showAboutus'])->name('aboutus');
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -45,6 +54,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/store-material', [MaterialController::class, 'add'])->name('add.material');
     Route::post('/update-material', [MaterialController::class, 'update'])->name('material.update');
     Route::post('/destroy-material', [MaterialController::class, 'destroy'])->name('material.destroy');
+
+    Route::get('/carrito', [CartController::class, 'index'])->name('cart.index');
+    Route::get('/add-cart/{productId}', [CartController::class, 'add'])->name('cart.add');
+
 });
 
 require __DIR__.'/auth.php';

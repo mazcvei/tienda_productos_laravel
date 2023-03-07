@@ -1,8 +1,8 @@
 <footer>
     <ul>
-        <li><a href="">Aviso Legal </a></li>
-        <li><a href="">Política de privacidad</a></li>
-        <li><a href="">Política de cookies</a></li>
+        <li><a href="{{route('aviso.legal')}}">Aviso Legal </a></li>
+        <li><a href="{{route('privacidad')}}">Política de privacidad</a></li>
+        <li><a href="{{route('cookies')}}">Política de cookies</a></li>
     </ul>
     <div>
         <a href="https://es-es.facebook.com/"><img src="{{asset('sources/data/facebook.gif')}}" class="social"></a>

@@ -1,9 +1,12 @@
 @extends("layouts.main")
 @section("content")
-
+    <style>
+        p {
+            margin: unset;
+        }
+    </style>
     <br><br>
-    <h1 class="title">POLÍTICA DE COOKIES
-        <h1>
+    <h1 class="title">POLÍTICA DE COOKIES</h1>
             <br>
             <h2 class="pbold">INFORMACIÓN SOBRE COOKIES</h2>
             <p>

@@ -11,7 +11,7 @@
     <nav class="nav">
         <ul class="menu">
             <li><a href="{{ route('home') }}">Home</a></li>
-            <li><a href="">Acerca de</a> </li>
+            <li><a href="{{route('aboutus')}}">Acerca de</a> </li>
             <li><a href="{{route('contact.index')}}">Contacto</a></li>
             <li><a href="{{route('products.index')}}">Productos</a></li>
             @guest
@@ -33,7 +33,10 @@
                 </form>
             </li>
             @endauth
-            <li id="basket"><a href=""><img src="{{asset('sources/data/cesta.png')}}" class="logo" alt="carrito"></a></li>
+            <li id="basket"><a href="{{route('cart.index')}}">
+                    <img src="{{asset('sources/data/cesta.png')}}" class="logo" alt="carrito">
+                    <span class="badge badge-danger" id="numItemsCart">{{\App\Helpers\CartHelper::getItemsCart()}}</span></a>
+            </li>
         </ul>
     </nav>
 

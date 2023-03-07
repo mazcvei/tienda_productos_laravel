@@ -1,9 +1,12 @@
 @extends("layouts.main")
 @section("content")
-
+    <style>
+        p {
+            margin: unset;
+        }
+    </style>
     <br><br>
-    <h1 class="title">AVISO LEGAL
-        <h1>
+    <h1 class="title">AVISO LEGAL</h1>
             <h2 class="pbold">Mercatavico</h2>
             <p>
                 Mercatavico , S.L., responsable del sitio web, en adelante RESPONSABLE, pone a disposición de los

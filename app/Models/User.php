@@ -26,7 +26,9 @@ class User extends Authenticatable
     public function rol(){
         return $this->belongsTo(Rol::class,'rol_id','id');
     }
-
+    public function cartItems(){
+        return $this->hasMany(Cart::class,'user_id','id');
+    }
 
 
 }
