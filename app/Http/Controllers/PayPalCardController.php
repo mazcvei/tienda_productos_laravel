@@ -50,7 +50,7 @@ class PayPalCardController extends Controller
 
         $payer = new Payer();
         $payer->setPaymentMethod('paypal');
-        dd($this->_api_context);
+
         $item_1 = new Item();
 
         $item_1->setName('Compra Mercadovico')/** AQUI DESCRIPCION DE LA COMPRA **/
