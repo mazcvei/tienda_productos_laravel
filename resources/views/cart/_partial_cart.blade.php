@@ -50,7 +50,7 @@
         <td class="text-right">
             <h4>
                 <strong>
-                    -{{\Illuminate\Support\Facades\Auth::user()->credits}} puntos</strong>
+                    -{{Auth::user()->credits > $totalAmount ? $totalAmount : Auth::user()->credits }} puntos</strong>
             </h4>
         </td>
     </tr>

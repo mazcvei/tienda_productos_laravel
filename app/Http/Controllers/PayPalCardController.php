@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CartHelper;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Payment;
@@ -58,9 +59,50 @@ class PayPalCardController extends Controller
         }
 
         try {
-            //TODO=>Restar del amunt, el numero de créditos, si amount queda negativo, restar todos los creditos
+            //Total : 70€ 80 creditos
+            $amountCart = CartHelper::calcTotalAmount();
+            $finalAmount = Auth::user()->credits < $amountCart ?
+                $amountCart - Auth::user()->credits  :
+                0;
+
+            $user = User::find(Auth::id());
+            if ($amountCart >= $user->credits){
+                $user->credits  = 0;
+            }else{
+                $user->credits = $user->credits - $amountCart;
+            }
+
+            $user->save();
+
+            if($finalAmount==0){
+                $order = Order::create([
+                    'user_id' => Auth::id(),
+                    'transaction' => null,
+                    'total' => $finalAmount,
+                    'pay' => 1,
+                    'payment_id' => null,
+                ]);
+                $cartItems = Auth::user()->cartItems;
+                foreach ($cartItems as $item) {
+                    OrderDetail::create([
+                        'product_id' => $item->product_id,
+                        'order_id' => $order->id,
+                        'quantity' => $item->quantity,
+                    ]);
+                    if ($item->product->user->rol->name == "usuario_registrado") {
+                        $user = User::find($item->product->user->id);
+                        $user->credits += ($item->product->price * $item->quantity) / 2;
+                        $user->save();
+                    }
+                    $item->delete();
+                }
+
+                return redirect()->route('profile.edit')
+                    ->with('success', 'Pedido realizado correctamente');
+
+            }
             $response = $this->gateway->purchase(array(
-                'amount' => $request->input('amount'),
+                'amount' => $finalAmount,
                 'currency' => env('PAYPAL_CURRENCY'),
                 'returnUrl' => url('success'),
                 'cancelUrl' => url('error'),

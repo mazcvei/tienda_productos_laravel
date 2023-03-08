@@ -13,11 +13,12 @@
     <th scope="col">Editar/Borrar</th>
 </tr>
 </thead>
-<tbody>
+<tbody id="content_products_table">
 @if(count($userProducts)>0)
 
     @foreach($userProducts as $producto)
-        <tr>
+        <tr class="product_item_list" data-product_id="{{$producto->id}}"
+            data-title="{{$producto->title}}" data-description="{{$producto->description}}" data-estado="{{$producto->state}}">
             <th scope="row">
                 <img style="width: 90px" src="{{asset('storage/productsImages/'.$producto->foto)}}">
             </th>
@@ -160,6 +161,21 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 <script>
+    var productList = [];
+    $('.product_item_list').each(function (index) {
+        productList.push($(this)[0]);
+    })
+    $('#search_productos').keyup((e) => {
+
+        $('#content_products_table').html('')
+        var productResult = productList.filter(product =>
+            product.dataset.title.toLowerCase().includes(e.currentTarget.value.toLowerCase()) ||
+            product.dataset.estado.toLowerCase().includes(e.currentTarget.value.toLowerCase()) ||
+            product.dataset.description.toLowerCase().includes(e.currentTarget.value.toLowerCase()))
+        for (product of productResult) {
+            $('#content_products_table').append(product)
+        }
+    })
 
     $('.edit_product').click((e)=>{
         $('.img-thumbnail_edit').attr('src','{{asset('storage/productsImages/')}}/'+e.currentTarget.dataset.foto)

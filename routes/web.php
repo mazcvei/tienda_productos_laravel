@@ -58,6 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/product-update', [ProductController::class, 'update'])->name('product.update');
     Route::post('/product-destroy', [ProductController::class, 'destroy'])->name('product.destroy');
     Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
+    Route::post('/product-filter', [ProductController::class, 'filter'])->name('product.filter');
     Route::post('/change-status-user', [UserController::class, 'changeRol'])->name('change.rol');
     Route::post('/user-update', [UserController::class, 'update'])->name('user.update');
     Route::post('/user-destroy', [UserController::class, 'destroy'])->name('user.destroy');

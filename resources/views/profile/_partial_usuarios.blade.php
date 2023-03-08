@@ -13,11 +13,11 @@
         <th scope="col">Editar/Borrar/Administrador</th>
     </tr>
     </thead>
-    <tbody>
+    <tbody id="content_users_table">
     @if(count($usuarios)>0)
 
         @foreach($usuarios as $usuario)
-            <tr>
+            <tr class="user_item_list" data-user_id="{{$usuario->id}}" data-name="{{$usuario->name}}" data-email="{{$usuario->email}}">
                 <td>{{$usuario->id}}</td>
                 <td>{{$usuario->name}}</td>
                 <td>{{$usuario->email}}</td>
@@ -57,7 +57,7 @@
             </tr>
         @endforeach
     @else
-        <p>No tienes produtos</p>
+        <p>No hay usuarios</p>
 
     @endif
 
@@ -149,7 +149,21 @@
 <script src="https://code.jquery.com/jquery-3.6.3.min.js"
         integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 <script>
+    var userList = [];
+    $('.user_item_list').each(function (index) {
+        userList.push($(this)[0]);
+    })
+    $('#search_usuarios').keyup((e) => {
+        console.log('keyup')
+        $('#content_users_table').html('')
+        var userResult = userList.filter(user =>
+            user.dataset.name.toLowerCase().includes(e.currentTarget.value.toLowerCase()) ||
+            user.dataset.email.toLowerCase().includes(e.currentTarget.value.toLowerCase()))
+        for (user of userResult) {
 
+            $('#content_users_table').append(user)
+        }
+    })
 
     $('.edit_user').click((e) => {
         console.log(e.currentTarget.dataset)

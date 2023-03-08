@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('transaction',256)->nullable();
             $table->decimal('total',$precision = 8, $scale = 2)->nullable($value = false);
             $table->tinyInteger('pay')->nullable($value = false)->default(0);
-            $table->unsignedInteger('payment_id')->nullable($value = false);
+            $table->unsignedInteger('payment_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('payment_id')->references('id')->on('payments')->onDelete('cascade');
             $table->timestamps();

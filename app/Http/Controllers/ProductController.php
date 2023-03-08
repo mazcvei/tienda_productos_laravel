@@ -123,10 +123,22 @@ class ProductController extends Controller
     }
 
     public function filter(Request $request){
-        if(Auth::user()->rol->name=='administrador'){
 
-        }else{
+        if(!$request->estado){
+            $productos = Product::where('price','>',$request->pmin)
+                ->where('price','<',$request->pmax)
+                ->get();
+            $html = view('products._partial_productos',compact('productos'))->render();
+            return response()->json(['view'=>$html]);
 
         }
+        $productos = Product::where('state',$request->estado)
+            ->where('price','>',$request->pmin)
+            ->where('price','<',$request->pmax)
+            ->get();
+        $html = view('products._partial_productos',compact('productos'))->render();
+
+        return response()->json(['view'=>$html]);
+
     }
 }

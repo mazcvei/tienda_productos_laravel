@@ -131,6 +131,7 @@
                 <button class="btn btn-primary" data-toggle="modal" data-target="#modalAddProducts">Añadir
                     producto
                 </button>
+                    <input type="search" class="form-control" placeholder="Buscar productos..." id="search_productos">
                     <div id="contentProductos" class="contenedor_datos">
                         @include('profile._partial_mis_productos',$userProducts)
                     </div>
@@ -138,7 +139,7 @@
             @if(\Illuminate\Support\Facades\Auth::user()->rol->name=="administrador")
                 <div class="col-12" style="text-align: center;margin-top: 50px">
                     <h1>Usuarios</h1>
-
+                    <input type="search" class="form-control" placeholder="Buscar usuarios..." id="search_usuarios">
                     <div id="contentUsers" style="margin-top: 50px">
                         @include('profile._partial_usuarios',$userProducts)
                     </div>
