@@ -59,12 +59,10 @@ class PayPalCardController extends Controller
         }
 
         try {
-            //Total : 70€ 80 creditos
             $amountCart = CartHelper::calcTotalAmount();
             $finalAmount = Auth::user()->credits < $amountCart ?
                 $amountCart - Auth::user()->credits  :
                 0;
-
             $user = User::find(Auth::id());
             if ($amountCart >= $user->credits){
                 $user->credits  = 0;

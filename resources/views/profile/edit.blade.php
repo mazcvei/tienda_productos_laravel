@@ -126,7 +126,7 @@
                 @if(\Illuminate\Support\Facades\Auth::user()->rol->name=="administrador")
                     <h1>Todos los productos</h1>
                 @else
-                    <h1>Miss productos</h1>
+                    <h1>Mis productos</h1>
                 @endif
                 <button class="btn btn-primary" data-toggle="modal" data-target="#modalAddProducts">Añadir
                     producto
@@ -141,7 +141,7 @@
                     <h1>Usuarios</h1>
                     <input type="search" class="form-control" placeholder="Buscar usuarios..." id="search_usuarios">
                     <div id="contentUsers" style="margin-top: 50px">
-                        @include('profile._partial_usuarios',$userProducts)
+                        @include('profile._partial_usuarios',$usuarios)
                     </div>
                 </div>
 
@@ -259,7 +259,7 @@
                                     <label for="state"><h4>Materiales (múltiple)</h4></label>
                                     <select class="form-control" id="inputSelectMateriales" name="materiales" multiple="multiple">
                                         @foreach($materials as $material)
-                                            <option value="{{$material->id}}">{{$material->nombre}}</option>
+                                            <option value="{{$material->id}}">{{$material->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -369,7 +369,7 @@
                 processData: false,
                 data: data,
                 success: function (data) {
-                    console.log(data)
+
                     $('#contentProductos').html(data.view)
                     $('#addProduct')[0].reset();
                     $('.img-thumbnail').attr('src','http://ssl.gstatic.com/accounts/ui/avatar_2x.png')

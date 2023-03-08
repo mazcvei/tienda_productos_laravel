@@ -154,7 +154,7 @@
         userList.push($(this)[0]);
     })
     $('#search_usuarios').keyup((e) => {
-        console.log('keyup')
+
         $('#content_users_table').html('')
         var userResult = userList.filter(user =>
             user.dataset.name.toLowerCase().includes(e.currentTarget.value.toLowerCase()) ||
@@ -166,7 +166,6 @@
     })
 
     $('.edit_user').click((e) => {
-        console.log(e.currentTarget.dataset)
         $('input[name="user_id"]').val(e.currentTarget.dataset.id)
         $('input[name="name_edit"]').val(e.currentTarget.dataset.name);
         $('input[name="email_edit"]').val(e.currentTarget.dataset.email);
@@ -203,7 +202,6 @@
     })
 
     $('.btnSetAdmin').click((e) => {
-        console.log(e.currentTarget.dataset.id)
         let data = new FormData();
         data.append('user_id', e.currentTarget.dataset.id);
         $.ajax({
@@ -246,7 +244,7 @@
             processData: false,
             data: data,
             success: function (data) {
-                console.log(data)
+
                 $('#contentUsers').html(data.view)
                 $('#editProduct')[0].reset();
                 $('.img-thumbnail').attr('src', '')

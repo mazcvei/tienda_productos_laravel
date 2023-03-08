@@ -6,16 +6,20 @@
         }
     </style>
     <br><br>
-    <h1 class="title">POLÍTICA DE COOKIES</h1>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+            <h1 class="title">POLÍTICA DE COOKIES</h1>
             <br>
-            <h2 class="pbold">INFORMACIÓN SOBRE COOKIES</h2>
+            <h2 >INFORMACIÓN SOBRE COOKIES</h2>
             <p>
                 Debido a la entrada en vigor de la referente modificación de la «Ley de Servicios de la Sociedad de la
                 Información» (LSSICE) establecida por el Real Decreto 13/2012, es de obligación obtener el
                 consentimiento expreso del usuario de todas las páginas web que usan cookies prescindibles, antes de que
                 este navegue por ellas.
             </p>
-            <h2 class="pbold">¿QUÉ SON LAS COOKIES?</h2>
+            <h2>¿QUÉ SON LAS COOKIES?</h2>
             <p>
                 Las cookies y otras tecnologías similares tales como local shared objects, flash cookies o píxeles, son
                 herramientas empleadas por los servidores Web para almacenar y recuperar información acerca de sus
@@ -26,14 +30,14 @@
                 usuario, como sus preferencias para la visualización de las páginas de ese servidor, nombre y
                 contraseña, productos que más le interesan, etc.
             </p>
-            <h2 class="pbold">COOKIES AFECTADAS POR LA NORMATIVA Y COOKIES EXCEPTUADAS</h2>
+            <h2 >COOKIES AFECTADAS POR LA NORMATIVA Y COOKIES EXCEPTUADAS</h2>
             <p>
                 Según la directiva de la UE, las cookies que requieren el consentimiento informado por parte del usuario
                 son las cookies de analítica y las de publicidad y afiliación, quedando exceptuadas las de carácter
                 técnico y las necesarias para el funcionamiento del sitio web o la prestación de servicios expresamente
                 solicitados por el usuario.
             </p>
-            <h2 class="pbold">TIPOS DE COOKIES SEGÚN LA FINALIDAD</h2>
+            <h2>TIPOS DE COOKIES SEGÚN LA FINALIDAD</h2>
             <ul class="list">
                 <li>Cookies técnicas y funcionales: son aquellas que permiten al usuario la navegación a través de una
                     página web, plataforma o aplicación y la utilización de las diferentes opciones o servicios que en
@@ -66,7 +70,7 @@
                 <li>Cookies de seguridad: almacenan información cifrada para evitar que los datos guardados en ellas
                     sean vulnerables a ataques maliciosos de terceros.
             </ul>
-            <h2 class="pbold">SEGÚN LA PROPIEDAD</h2>
+            <h2>SEGÚN LA PROPIEDAD</h2>
             <ul class="list">
                 <li>Cookies propias: son aquellas que se envían al equipo terminal del usuario desde un equipo o dominio
                     gestionado por el propio editor y desde el que se presta el servicio solicitado por el usuario.
@@ -76,7 +80,7 @@
                     través de las cookies.
                 </li>
             </ul>
-            <h2 class="pbold">SEGÚN EL PLAZO DE CONSERVACIÓN</h2>
+            <h2>SEGÚN EL PLAZO DE CONSERVACIÓN</h2>
             <ul class="list">
                 <li>Cookies de sesión: son un tipo de cookies diseñadas para recabar y almacenar datos mientras el
                     usuario accede a una página web.
@@ -86,7 +90,7 @@
                     puede ir de unos minutos a varios años.
                 </li>
             </ul>
-            <h2 class="pbold">TRATAMIENTO DE DATOS PERSONALES</h2>
+            <h2>TRATAMIENTO DE DATOS PERSONALES</h2>
             <p>
                 Mercatavico , S.L. es el Responsable del tratamiento de los datos personales del Interesado y le informa
                 de que estos datos serán tratados de conformidad con lo dispuesto en el Reglamento (UE) 2016/679, de 27
@@ -117,5 +121,8 @@
                 Mercatavico , S.L.. Parque Empresarial de Penapurreira Parcelas , B1/B2 - 15320 As Pontes (A Coruña).
                 E-mail: mercatavico@gmail.com
             </p>
+            </div>
+        </div>
+    </div>
 
 @endsection

@@ -76,7 +76,7 @@
 @section('javascript')
     <script>
         $('.control-label--showpass').click((e)=>{
-            console.log('click')
+
             if($('input[name="password"]').attr('type' )=='text'){
                 $('input[name="password"]').attr('type','password')
             }else{

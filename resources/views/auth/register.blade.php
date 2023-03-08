@@ -163,7 +163,7 @@
 @section('javascript')
     <script>
         $('.control-label--showpass').click((e) => {
-            console.log('click')
+
             if ($('input[name="password"]').attr('type') == 'text') {
                 $('input[name="password"]').attr('type', 'password')
             } else {
@@ -171,7 +171,7 @@
             }
         })
         $('.control-label--showpass-c').click((e) => {
-            console.log('click')
+
             if ($('input[name="password_confirmation"]').attr('type') == 'text') {
                 $('input[name="password_confirmation"]').attr('type', 'password')
             } else {

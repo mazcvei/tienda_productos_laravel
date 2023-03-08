@@ -19,9 +19,10 @@ return new class extends Migration
             $table->unsignedInteger('product_id')->nullable($value = false);
             $table->integer('quantity')->default(0);
             $table->timestamps();
-            $table->engine ='innoDB';
+
             $table->foreign('product_id')->references('id')->on('products')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->engine ='innoDB';
         });
     }
 

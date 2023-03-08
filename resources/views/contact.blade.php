@@ -113,7 +113,6 @@
                 processData: false,
                 data: data,
                 success: function (data) {
-                    console.log(data)
                     toastr.success(data.message);
                     $('input[name="name"]').val('')
                     $('input[name="email"]').val('')
@@ -122,7 +121,6 @@
                     $('#agree').prop('checked',false)
                 },
                 error: function (error) {
-                    console.log(error)
                     toastr.error(error.responseJSON.message);
                 }
             });

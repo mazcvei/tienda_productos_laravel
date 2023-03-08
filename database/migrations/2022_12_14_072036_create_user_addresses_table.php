@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user_billing_addresses', function (Blueprint $table) {
+        Schema::create('user_addresses', function (Blueprint $table) {
             $table->integerIncrements('id');
             $table->string('address')->nullable($value = false);
             $table->string('city')->nullable($value = false);

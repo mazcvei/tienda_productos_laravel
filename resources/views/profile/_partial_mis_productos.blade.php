@@ -128,7 +128,7 @@
                                 <label for="state"><h4>Materiales (múltiple)</h4></label>
                                 <select class="form-control" id="inputSelectMaterialesEdit" name="materiales" multiple="multiple">
                                     @foreach(\App\Models\Material::all() as $material)
-                                        <option value="{{$material->id}}">{{$material->nombre}}</option>
+                                        <option value="{{$material->id}}">{{$material->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -185,12 +185,10 @@
         $('input[name="price_edit"]').val(e.currentTarget.dataset.price);
         $('input[name="stock_edit"]').val(e.currentTarget.dataset.stock);
         $('select[name="state_edit"]').val(e.currentTarget.dataset.state);
-        console.log(e.currentTarget.dataset.materiales.split(','))
         $('#inputSelectMaterialesEdit').val(e.currentTarget.dataset.materiales.split(','));
     })
 
     $('#btnUpdateProduct').click((e)=>{
-        console.log('evento update product')
         let data = new FormData();
         data.append('product_id', $('input[name="product_id"]').val());
         data.append('title', $('input[name="title_edit"]').val());
@@ -210,16 +208,14 @@
             processData: false,
             data: data,
             success: function (data) {
-                console.log('update ok')
+
                 $('#contentProductos').html(data.view)
                 $('#editProduct')[0].reset();
                 $('.img-thumbnail').attr('src','http://ssl.gstatic.com/accounts/ui/avatar_2x.png')
-                $('.modal-backdrop').remove()
-                $('body').removeClass('modal-open')
                 toastr.success(data.message);
             },
             error: function (error) {
-                console.log('update error')
+
                 toastr.error(error);
             }
         });
@@ -257,8 +253,6 @@
             var readerEdit = new FileReader();
 
             readerEdit.onload = function (e) {
-                console.log('dentro read')
-                console.log( $('.img-thumbnail_edit'))
                 $('.img-thumbnail_edit').attr('src', e.target.result);
             }
 
@@ -266,7 +260,7 @@
         }
     }
     $("#foto_edit_input").on('change', function () {
-        console.log('evento')
+
         readURLEdit(this);
     });
 

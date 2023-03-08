@@ -6,8 +6,11 @@
         }
     </style>
     <br><br>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
     <h1 class="title">AVISO LEGAL</h1>
-            <h2 class="pbold">Mercatavico</h2>
+            <h2 class="">Mercatavico</h2>
             <p>
                 Mercatavico , S.L., responsable del sitio web, en adelante RESPONSABLE, pone a disposición de los
                 usuarios el presente documento, con el que pretende dar cumplimiento a las obligaciones dispuestas en la
@@ -25,7 +28,7 @@
                 en el sitio web, sin que exista obligación de preavisar o poner en conocimiento de los usuarios dichas
                 obligaciones, entendiéndose como suficiente la publicación en el sitio web de Mercatavico , S.L..
             </p>
-            <h2 class="pbold">1. DATOS IDENTIFICATIVOS</h2>
+            <h2 class="">1. DATOS IDENTIFICATIVOS</h2>
             <ul class="list">
                 <li>Nombre de dominio: Mercatavico.com
                 <li>Nombre comercial: Mercatavico , S.L.</li>
@@ -35,7 +38,7 @@
                 <li>Teléfono: 000 000 000</li>
                 <li>E-mail: ​mercatavico@gmail.com</li>
             </ul>
-            <h2 class="pbold">2. DERECHOS DE PROPIEDAD INTELECTUAL E INDUSTRIAL</h2>
+            <h2 class="">2. DERECHOS DE PROPIEDAD INTELECTUAL E INDUSTRIAL</h2>
             <p>
                 El sitio web, incluyendo a título enunciativo, pero no limitativo su programación, edición, compilación
                 y demás elementos necesarios para su funcionamiento, los diseños, logotipos, texto y/o gráficos, son
@@ -67,8 +70,8 @@
                 propiedad intelectual o industrial, así como sobre cualquiera de los contenidos del sitio web, puede
                 hacerlo a través del correo electrónico info@Mercatavico.com.
             </p>
-            <h2 class="pbold">3. EXENCIÓN DE RESPONSABILIDADES</h2>
-            <h3 class="p3">Uso de Cookies </h3>
+            <h2 class="">3. EXENCIÓN DE RESPONSABILIDADES</h2>
+            <h3>Uso de Cookies </h3>
             <p>
                 Este sitio web puede utilizar cookies técnicas (pequeños archivos de información que el servidor envía
                 al ordenador de quien accede a la página) para llevar a cabo determinadas funciones que son consideradas
@@ -99,7 +102,7 @@
                 y para impedir su instalación en su equipo. Por favor, consulte las instrucciones de su navegador para
                 ampliar esta información.
             </p>
-            <h3 class="p3">Política de enlaces</h3>
+            <h3>Política de enlaces</h3>
             <p>
                 Desde el sitio web, es posible que se redirija a contenidos de terceros sitios web. Dado que el
                 RESPONSABLE no puede controlar siempre los contenidos introducidos por terceros en sus respectivos
@@ -127,7 +130,7 @@
                 causas de fuerza mayor, catástrofes naturales, huelgas o circunstancias semejantes que hagan imposible
                 el acceso a la página web.
             </p>
-            <h3 class="p3">Direcciones IP</h3>
+            <h3 >Direcciones IP</h3>
             <p>
                 Los servidores del sitio web podrán detectar de manera automática la dirección IP y el nombre de dominio
                 utilizados por el usuario. Una dirección IP es un número asignado automáticamente a un ordenador cuando
@@ -136,12 +139,12 @@
                 mediciones únicamente estadísticas que permitan conocer el número de impresiones de páginas, el número
                 de visitas realizadas a los servidores web, el orden de visitas, el punto de acceso, etc.
             </p>
-            <h2 class="pbold">4. LEY APLICABLE Y JURISDICCIÓN</h2>
+            <h2>4. LEY APLICABLE Y JURISDICCIÓN</h2>
             <p>
                 Para la resolución de todas las controversias o cuestiones relacionadas con el presente sitio web o de
                 las actividades en él desarrolladas, será de aplicación la legislación española, a la que se someten
                 expresamente las partes, siendo competentes para la resolución de todos los conflictos derivados o
                 relacionados con su uso los Juzgados y Tribunales más cercanos a Ferrol (A Coruña).
             </p>
-
+            </div></div></div>
 @endsection

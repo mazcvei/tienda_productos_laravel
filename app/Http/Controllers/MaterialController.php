@@ -26,7 +26,7 @@ class MaterialController extends Controller
         if(Auth::user()->rol->name=="administrador"){
             $material = Material::find($request->material_id);
             if($material){
-                $material->nombre = $request->material_name;
+                $material->name = $request->material_name;
                 $material->save();
                 $materials = Material::all();
                 $html = view('profile._partial_materials',compact('materials'))->render();

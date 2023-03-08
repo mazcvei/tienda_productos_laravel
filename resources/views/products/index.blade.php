@@ -40,7 +40,6 @@
     <br>
     <div class="container">
         <div class="row" id="content_products">
-
            @include('products._partial_productos',$productos)
         </div>
     </div>
@@ -49,7 +48,33 @@
 
 @section('javascript')
     <script>
+        $('#btnFilter').click((e) => {
+            $('#content_products').html('')
+            let estado = $('#state').val().toLowerCase();
+            let pmin = $('#pmin').val() ? $('#pmin').val() : 0;
+            let pmax = $('#pmax').val() ? $('#pmax').val() : 999999999;
+            let data = new FormData();
+            data.append('estado',estado);
+            data.append('pmin',pmin);
+            data.append('pmax',pmax);
 
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('input[name="_token"]').val()
+                },
+                url: '{{route('product.filter')}}',
+                type: 'post',
+                contentType: false,
+                processData: false,
+                data: data,
+                success: function (data) {
+                    $('#content_products').html(data.view)
+                },
+                error: function (error) {
+                    //toastr.error(error.responseJSON.message);
+                }
+            });
+        })
 
         $('.addCartBtn').click((e)=>{
             let product_id = e.currentTarget.dataset.product_id;

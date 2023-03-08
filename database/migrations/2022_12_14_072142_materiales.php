@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('materials', function (Blueprint $table) {
             $table->integerIncrements('id');
             $table->string('name',250);
+            $table->timestamps();
             $table->engine ='innoDB';
         });
     }

@@ -25,36 +25,4 @@
         </div>
     </div>
 @endforeach
-<script src="https://code.jquery.com/jquery-3.6.3.min.js"
-        integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-<script>
-    $('#btnFilter').click((e) => {
 
-        $('#content_products').html('')
-        let estado = $('#state').val().toLowerCase();
-        let pmin = $('#pmin').val() ? $('#pmin').val() : 0;
-        let pmax = $('#pmax').val() ? $('#pmax').val() : 999999999;
-        let data = new FormData();
-        data.append('estado',estado);
-        data.append('pmin',pmin);
-        data.append('pmax',pmax);
-
-
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('input[name="_token"]').val()
-            },
-            url: '{{route('product.filter')}}',
-            type: 'post',
-            contentType: false,
-            processData: false,
-            data: data,
-            success: function (data) {
-                $('#content_products').html(data.view)
-            },
-            error: function (error) {
-                toastr.error(error.responseJSON.message);
-            }
-        });
-    })
-</script>

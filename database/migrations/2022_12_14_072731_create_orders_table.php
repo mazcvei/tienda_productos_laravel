@@ -21,7 +21,7 @@ return new class extends Migration
             $table->tinyInteger('pay')->nullable($value = false)->default(0);
             $table->unsignedInteger('payment_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('payment_id')->references('id')->on('payments')->onDelete('cascade');
+            $table->foreign('payment_id')->references('id')->on('payments')->onDelete('set null');
             $table->timestamps();
             $table->engine ='innoDB';
         });

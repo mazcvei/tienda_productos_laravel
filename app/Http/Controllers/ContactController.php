@@ -31,10 +31,8 @@ class ContactController extends Controller
             'agree' => 'required',
             'g-recaptcha-response' => 'required|recaptchav3:register,0.5'
         ]);
-
         $datos = $request->except('agree');
-        //TODO=>Modificar
-        Mail::to('mario.azcvei@hotmail.com')->send(new MailContact($datos));
+        Mail::to('mercatavico.com@gmail.com')->send(new MailContact($datos));
         return response()->json(['status' => 'ok', 'message' => 'Se ha enviado el mensaje correctamente.'], 200);
 
 

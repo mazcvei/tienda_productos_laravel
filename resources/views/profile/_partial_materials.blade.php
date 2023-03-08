@@ -12,9 +12,9 @@
     @foreach($materials as $material)
         <tr>
             <td>{{$material->id}}</td>
-            <td>{{$material->nombre}}</td>
+            <td>{{$material->name}}</td>
             <td>
-                <button class="btn btn-success edit_material" data-toggle="modal" data-target="#modalEditMaterial" data-name="{{$material->nombre}}"
+                <button class="btn btn-success edit_material" data-toggle="modal" data-target="#modalEditMaterial" data-name="{{$material->name}}"
                         data-id="{{$material->id}}">Editar</button>
                 <button class="btn btn-danger deleteMaterial"  data-id="{{$material->id}}"  data-toggle="modal" data-target="#confirmDeleteMaterialModal">Eliminar</button>
 
@@ -22,7 +22,7 @@
         </tr>
     @endforeach
 @else
-    <p>No tienes produtos</p>
+    <p>No tienes materiales</p>
 
 @endif
 
@@ -83,7 +83,7 @@
 <script>
 
     $('.edit_material').click((e)=>{
-        console.log(e.currentTarget.dataset)
+
         $('input[name="material_id_edit"]').val(e.currentTarget.dataset.id)
         $('input[name="material_name_edit"]').val(e.currentTarget.dataset.name)
     })

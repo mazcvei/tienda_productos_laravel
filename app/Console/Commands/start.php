@@ -61,7 +61,7 @@ class start extends Command
             $materiales = ['Madera','Caucho','Metal','Acero','Zinc'];
             foreach($materiales as $material){
                 Material::create([
-                    'nombre'=>$material
+                    'name'=>$material
                 ]);
             }
             echo "Materiales creados\n";
